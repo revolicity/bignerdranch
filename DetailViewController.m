@@ -278,27 +278,4 @@
     }
 }
 
-- (IBAction)valueTextChanged:(id)sender {
-    NSString *local = [valueField text];
-    float value = [local floatValue];
-    
-    // look at the value extracted from the sting
-    if (0.0 == value)  {
-        valueField.textColor  = [UIColor blackColor];
-    }
-    else if (50.0 >= value) {
-        valueField.textColor  = [UIColor greenColor];
-    }
-    else    {
-        valueField.textColor  = [UIColor redColor];
-    }
-        
-    
-    
-    // if its bigger, than 50 change the text color
-    
-    // if its less, change it
-    
-    // if not a value, make it black
-}
 @end

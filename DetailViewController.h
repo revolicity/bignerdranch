@@ -24,7 +24,6 @@
     
     UIPopoverController *imagePickerPopover;
 }
-- (IBAction)valueTextChanged:(id)sender;
 
 @property (nonatomic, strong) BNRItem *item;
 @property (nonatomic, copy) void (^dismissBlock)(void);
