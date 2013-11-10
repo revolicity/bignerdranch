@@ -10,12 +10,49 @@
 #import "BNRItemStore.h"
 #import "BNRItem.h"
 #import "HomepwnerItemCell.h"
+#import "BNRImageStore.h"
+#import "ImageViewController.h"
 
 @implementation ItemsViewController
 
 - (void)showImage:(id)sender atIndexPath:(NSIndexPath *)ip
 {
     NSLog(@"Going to show the image for %@", ip);
+    
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)    {
+        // Get the item for the index path
+        BNRItem *i = [[[BNRItemStore sharedStore] allItems] objectAtIndex:[ip row]];
+        
+        NSString *imageKey = [i imageKey];
+        
+        // If there is no image, we don;t need to display anything
+        UIImage *img = [[BNRImageStore sharedStore] imageForKey:imageKey];
+        if(!img)
+            return;
+        
+        // make a rectangle that the frame of the btton relative to
+        // our table view
+        CGRect rect = [[self view] convertRect:[sender bounds] fromView:sender];
+        
+        // create a new iamgeviewcontroller and set its iamge
+        ImageViewController *ivc = [[ImageViewController alloc] init];
+        [ivc setImage:img];
+        
+        // present the popover!
+        imagePopover = [[UIPopoverController alloc]initWithContentViewController:ivc];
+        [imagePopover setDelegate:self];
+        [imagePopover setPopoverContentSize:CGSizeMake(600,600)];
+        [imagePopover presentPopoverFromRect:rect
+                                      inView:[self view]
+                    permittedArrowDirections:UIPopoverArrowDirectionAny
+                                    animated:YES];
+    }
+}
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+    [imagePopover dismissPopoverAnimated:YES];
+    imagePopover = nil;
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -109,10 +146,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     UINavigationController *nc = [[UINavigationController alloc]
                                   initWithRootViewController:dvc];
-    
+
     [nc setModalPresentationStyle:UIModalPresentationFormSheet];
     
-    [nc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [nc setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController: nc animated:YES completion:nil];
 }
@@ -182,5 +219,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)io
+{
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
+        return YES;
+    }
+    else
+    {
+        return (io == UIInterfaceOrientationPortrait);
+    }
+}
 
 @end

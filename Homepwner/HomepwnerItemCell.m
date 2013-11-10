@@ -6,6 +6,11 @@
 //  Copyright (c) 2013 com.bignerdranch. All rights reserved.
 //
 
+
+// I don't want to do this here...
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+// how do we prevent the selector 
+
 #import "HomepwnerItemCell.h"
 
 @implementation HomepwnerItemCell
@@ -15,20 +20,20 @@
 @synthesize serialNumberLabel;
 @synthesize nameLabel;
 
-@synthesize tableView = _tableViewBRS;
+@synthesize tableView;
 @synthesize controller;
 
 
 - (IBAction)showImage:(id)sender
 {
-    // Get this name of this method
+    // Get this name of this method, "showImage:"
     NSString *selector = NSStringFromSelector(_cmd);
-    
-    selector = [selector stringByAppendingString:@"atIndexPath"];
+    // selector is now "showImage:atImagePath:"
+    selector = [selector stringByAppendingString:@"atIndexPath:"];
     
     SEL newSelector = NSSelectorFromString(selector);
     
-    NSSelectorFromString(selector);
+    //NSSelectorFromString(selector);
     
     NSIndexPath *indexPath = [[self tableView] indexPathForCell:self];
     
@@ -43,4 +48,5 @@
         }
     }
 }
+
 @end

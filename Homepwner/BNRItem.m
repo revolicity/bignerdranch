@@ -75,10 +75,6 @@
     //cleanup iamge context resources
     UIGraphicsGetCurrentContext();
     
-    
-    
-    
-    
 }
 
 + (id)randomItem

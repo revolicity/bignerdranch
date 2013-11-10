@@ -22,19 +22,22 @@
     
     if (self)
     {
-        UIBarButtonItem *doneItem = [[UIBarButtonItem alloc]
+        if(isNew)
+        {
+            UIBarButtonItem *doneItem = [[UIBarButtonItem alloc]
                                      initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                      target:self
                                      action:@selector(save:)];
         
-        [[self navigationItem] setRightBarButtonItem:doneItem];
+            [[self navigationItem] setRightBarButtonItem:doneItem];
         
-        UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc]
+            UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc]
                                        initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                        target:self
                                        action:@selector(cancel:)];
-        [[self navigationItem] setLeftBarButtonItem:cancelItem];
-
+            [[self navigationItem] setLeftBarButtonItem:cancelItem];
+        }
+        
     }
     
     return self;
@@ -44,14 +47,15 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     @throw [NSException exceptionWithName:@"Wrong Initializer"
-                                   reason:@"Use initForNewItem"
-                                 userInfo:nil];
+                                    reason:@"Use initForNewItem"
+                                    userInfo:nil];
     return nil;
 }
 
 - (void)save:(id)sender
 {
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:dismissBlock];
+    [[self presentingViewController] dismissViewControllerAnimated:YES
+                                                        completion:dismissBlock];
 }
 
 - (void)cancel:(id)sender
@@ -142,7 +146,7 @@
     
     // now create a string from this
     CFStringRef newUniqueIDString =
-    CFUUIDCreateString(kCFAllocatorDefault, newUniqueID);
+        CFUUIDCreateString(kCFAllocatorDefault, newUniqueID);
     
     // use that unique ID to set our item's imagekey
     NSString *key = (__bridge NSString *)newUniqueIDString;
@@ -274,4 +278,27 @@
     }
 }
 
+- (IBAction)valueTextChanged:(id)sender {
+    NSString *local = [valueField text];
+    float value = [local floatValue];
+    
+    // look at the value extracted from the sting
+    if (0.0 == value)  {
+        valueField.textColor  = [UIColor blackColor];
+    }
+    else if (50.0 >= value) {
+        valueField.textColor  = [UIColor greenColor];
+    }
+    else    {
+        valueField.textColor  = [UIColor redColor];
+    }
+        
+    
+    
+    // if its bigger, than 50 change the text color
+    
+    // if its less, change it
+    
+    // if not a value, make it black
+}
 @end
