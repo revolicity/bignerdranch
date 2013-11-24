@@ -14,6 +14,9 @@
 {
     //put any class variables in here
     NSMutableArray *allItems;
+    NSMutableArray *allAssetTypes;
+    NSManagedObjectContext *context;
+    NSManagedObjectModel *model;
 }
 
 // class method gets a +
@@ -28,5 +31,7 @@
 
 - (NSString *)itemArchivePath;
 - (BOOL)saveChanges;
+
+- (void)loadAllItems;
 
 @end

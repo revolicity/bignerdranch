@@ -194,7 +194,9 @@
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     
     //use filtered NSDate object for label
-    [dateLabel setText:[dateFormatter stringFromDate:[item dateCreated]]];
+    //[dateLabel setText:[dateFormatter stringFromDate:[item dateCreated]]];
+    NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:[item dateCreated]];
+    [dateLabel setText:[dateFormatter stringFromDate:date]];
     
     // ok update the image stuff
     NSString *imageKey = [item imageKey];

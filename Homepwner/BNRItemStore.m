@@ -17,12 +17,37 @@
     self = [super init];
     if (self)
     {
-        NSString *path = [self itemArchivePath];
-        allItems = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        //read in Homepwner.xcdatamodeld
+        model = [NSManagedObjectModel mergedModelFromBundles:nil];
         
-        if(!allItems)
-            allItems = [[NSMutableArray alloc] init];
+        NSPersistentStoreCoordinator *psc =
+        [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+        
+        //where does the SQlite file go?
+        NSString *path = [self itemArchivePath];
+        NSURL *storeURL = [NSURL fileURLWithPath:path];
+        
+        NSError *error = nil;
+        
+        if (![psc addPersistentStoreWithType:NSSQLiteStoreType
+                               configuration:nil
+                                         URL:storeURL
+                                     options:nil
+                                       error:&error])
+            [NSException raise:@"Open Failed"
+                        format:@"Reason %@", [error localizedDescription]];
+            
+        // Create the managed object context
+        context = [[NSManagedObjectContext alloc] init];
+        [context setPersistentStoreCoordinator:psc];
+        
+        // The managed object context cann manage undo, but we don't need it
+        [context setUndoManager:nil];
+        
+        [self loadAllItems];
+        
     }
+    
     return self;
 }
 
@@ -33,7 +58,18 @@
 
 - (BNRItem *)createItem
 {
-    BNRItem *p = [[BNRItem alloc] init];
+    double order = 0.0;
+    if ([allItems count])   {
+        order = 1.0;
+    } else  {
+        order = [[allItems lastObject] orderingValue] + 1.0;
+    }
+    NSLog(@"Adding after %d itmes, order = %.2f", [allItems count], order);
+    
+    BNRItem *p = [NSEntityDescription insertNewObjectForEntityForName:@"BNRItem"
+                                               inManagedObjectContext:context];
+    
+    [p setOrderingValue:order];
     
     [allItems addObject:p];
     
@@ -73,13 +109,36 @@
     // insert at new place
     [allItems insertObject:p atIndex:to];
     
+    // Computing a new orderValue for the object that was moved
+    double lowerBound = 0.0;
+    
+    // Is there an object before it in the array?
+    if (to > 0) {
+        lowerBound = [[allItems objectAtIndex:to - 1] orderingValue];
+    }   else   {
+        lowerBound = [[allItems objectAtIndex:1] orderingValue] - 2.0;
+    }
+    
+    double upperBound = 0.0;
+    
+    // Is there an object after it in the array?
+    if (to > [allItems count] - 1)  {
+        upperBound = [[allItems objectAtIndex:to + 1] orderingValue];
+    }   else    {
+        upperBound = [[allItems objectAtIndex:to - 1] orderingValue] + 2.0;
+    }
+    
+    double newOrderValue = (lowerBound + upperBound) / 2.0;
+    
+    NSLog(@"moving to order %f",newOrderValue);
+    [p setOrderingValue:newOrderValue];
 }
 
 -(void)removeItem:(BNRItem *)p
 {
     NSString *key = [p imageKey];
     [[BNRImageStore sharedStore] deleteImageForKey:key];
-
+    [context deleteObject:p];
     [allItems removeObjectIdenticalTo:p];
 }
 
@@ -91,16 +150,51 @@
     // Get one and only document directory from that list
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
     
-    return [documentDirectory stringByAppendingPathComponent:@"items.archive"];
-    
+    //return [documentDirectory stringByAppendingPathComponent:@"items.archive"];
+    return [documentDirectory stringByAppendingPathComponent:@"store.data"];
 }
 
 - (BOOL)saveChanges
 {
     //return success or failure
-    NSString *path = [self itemArchivePath];
-    
-    return [NSKeyedArchiver archiveRootObject:allItems toFile:path];
+    NSError *error = nil;
+    BOOL successful = [context save:&error];
+    if (!successful)    {
+        NSLog(@"Error saving: %@", [error localizedDescription]);
+    }
+    return successful;
+}
+
+
+- (void)loadAllItems
+{
+    if (!allItems)  {
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *e = [[model entitiesByName] objectForKey:@"BNRItem"];
+        [request setEntity:e];
+        
+        NSSortDescriptor *sd = [NSSortDescriptor
+                                    sortDescriptorWithKey:@"orderingValue"
+                                                ascending:YES];
+        
+        [request setSortDescriptors:[NSArray arrayWithObject:sd]];
+        
+        NSError *error = nil;
+        NSArray *result = [context executeFetchRequest:request
+                                                 error:&error];
+        if(!result) {
+            [NSException raise:@"Fetch Failed"
+                        format:@"Reason: %@", [error localizedDescription]];
+        }
+        
+        allItems = [[NSMutableArray alloc] initWithArray:result];
+    }
 }
 
 @end
+
+
+
+
+

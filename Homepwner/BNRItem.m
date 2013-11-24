@@ -1,34 +1,25 @@
 //
 //  BNRItem.m
-//  RandomPossessions
+//  Homepwner_BS
 //
-//  Created by Brian Schick on 1/5/13.
-//  Copyright (c) 2013 Brian Schick. All rights reserved.
+//  Created by Brian Schick on 11/16/13.
+//  Copyright (c) 2013 com.bignerdranch. All rights reserved.
 //
 
 #import "BNRItem.h"
 
-@implementation BNRItem
-@synthesize imageKey;
-@synthesize itemName;   //remember what they said in stanford... don't use the same global variable as synthesize
-@synthesize containedItem, container, serialNumber, valueInDollars, dateCreated;
-@synthesize thumbnail, thumbnailData;
 
-- (UIImage *)thumbnail
-{
-    // if there is no thumbnail data, I have no thumbanail to return
-    if(!thumbnailData)
-    {
-        return nil;
-    }
-    
-    if (!thumbnail)
-    {
-        // create the image from the data
-        thumbnail = [UIImage imageWithData:thumbnailData];
-    }
-    return thumbnail;
-}
+@implementation BNRItem
+
+@dynamic itemName;
+@dynamic serialNumber;
+@dynamic valueInDollars;
+@dynamic dateCreated;
+@dynamic imageKey;
+@dynamic thumbnailData;
+@dynamic thumbnail;
+@dynamic orderingValue;
+@dynamic assetType;
 
 - (void)setThumbnailDataFromImage:(UIImage *)image
 {
@@ -77,126 +68,19 @@
     
 }
 
-+ (id)randomItem
+- (void)awakeFromFetch
 {
-    //create an array of three adjectives
-    NSArray *randomAdjectiveList = [NSArray arrayWithObjects:@"Fluffy",@"Rusty",@"Shiny",nil];
-    NSArray *randomNounList = [NSArray arrayWithObjects:@"Bear",@"Spork",@"Mac",nil];
+    [super awakeFromFetch];
     
-    NSInteger adjectiveIndex = rand() % [randomAdjectiveList count];
-    NSInteger nounIndex = rand() % [randomNounList count];
-    
-    NSString *randomName = [NSString stringWithFormat:@"%@ %@",
-                            [randomAdjectiveList objectAtIndex:adjectiveIndex],
-                            [randomNounList objectAtIndex:nounIndex]];
-                            
-    int randomValue = rand() % 100;
-    
-    NSString *randomSerialNumber = [ NSString stringWithFormat:@"%c%c%c%c%c",
-                                    '0' + rand() % 10,
-                                    'A' + rand() % 26,
-                                    '0' + rand() % 10,
-                                    'A' + rand() % 26,
-                                    '0' + rand() % 10];
-    
-    BNRItem * newItem = [[self alloc] initWithItemName:randomName
-                                        valueInDollars:randomValue
-                                           serialNumer:randomSerialNumber];
-    
-    return newItem;
-    
+    UIImage *tn = [UIImage imageWithData:[self thumbnailData]];
+    [self setPrimitiveValue:tn forKey:@"thumbnail"];
 }
 
-- (id)initWithItemName:(NSString *)name
-        valueInDollars:(int)value
-           serialNumer:(NSString *)sNumber
+-(void)awakeFromInsert
 {
-    //call the superclass's designated intializer
-    self = [super init];
-    
-    if (self)
-    {
-        //Give the instance variables initial values
-        [self setItemName:name];
-        [self setSerialNumber:sNumber];
-        [self setValueInDollars:value];
-        dateCreated = [[NSDate alloc] init];
-    }
-    //return address of newly created object
-    return self;
-    
-}
-
-- (id)init
-{
-    return [self initWithItemName:@"Item"
-                   valueInDollars:0
-                      serialNumer:@""];
-}
-
-- (void)dealloc
-{
-    NSLog(@"Destroyed: %@.",self);
-}
-
-- (void)setItemName:(NSString *)name
-       serialNumber:(NSString *)sNumber
-{
-    itemName = name;
-    serialNumber = sNumber;
-    
-}
-
-- (NSString *)description
-{
-    NSString * descriptionString =
-    [[NSString alloc] initWithFormat:@"%@ (%@): Worth $%d, recorded on %@",
-     itemName,
-     serialNumber,
-     valueInDollars,
-     dateCreated];
-    
-    return descriptionString;
-}
-
-- (void)setContainedItem:( BNRItem *)i
-{
-    containedItem = i;
-    
-    //when given an item to contain, the contained
-    //item will be given a pointer to its container
-    [i setContainer:self];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super init];
-    if(self)
-    {
-        [self setItemName:[aDecoder decodeObjectForKey:@"itemName"]];
-        [self setSerialNumber:[aDecoder decodeObjectForKey:@"serialNumber"]];
-        [self setImageKey:[aDecoder decodeObjectForKey:@"imageKey"]];
-        
-        [self setValueInDollars:[aDecoder decodeIntForKey:@"valueInDollars"]];
-        
-        dateCreated = [aDecoder decodeObjectForKey:@"dateCreated"];
-        
-        thumbnailData = [aDecoder decodeObjectForKey:@"thumbnailData"];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:itemName forKey:@"itemName"];
-    [aCoder encodeObject:serialNumber forKey:@"serialNumber"];
-    [aCoder encodeObject:dateCreated forKey:@"dateCreated"];
-    [aCoder encodeObject:imageKey forKey:@"imageKey"];
-    
-    [aCoder encodeInt:valueInDollars forKey:@"valueInDollars"];
-    
-    [aCoder encodeObject:thumbnailData forKey:@"thumbnailData"];
-    
+    [super awakeFromInsert];
+    NSTimeInterval t = [[NSDate date] timeIntervalSinceReferenceDate];
+    [self setDateCreated:t];
 }
 
 @end
