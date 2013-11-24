@@ -22,6 +22,8 @@
 // class method gets a +
 + (BNRItemStore *)sharedStore;
 
+- (NSArray *)allAssetTypes;
+
 - (NSArray *)allItems;
 - (BNRItem *)createItem;
 - (void)removeItem:(BNRItem *)p;

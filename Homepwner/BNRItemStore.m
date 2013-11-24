@@ -192,6 +192,52 @@
     }
 }
 
+- (NSArray *)allAssetTypes
+{
+    if(!allAssetTypes)  {
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *e = [[model entitiesByName]
+                                  objectForKey:@"BNRAssetType"];
+        
+        [request setEntity:e];
+        
+        NSError *error;
+        NSArray *result = [context executeFetchRequest:request error:&error];
+        if (!result)    {
+            [NSException raise:@"Fetch Failed"
+                        format:@"Reason: %@", [error localizedDescription]];
+        }
+        allAssetTypes = [result mutableCopy];
+    }
+    
+    //is this the first time the program is being run?
+    if ([allAssetTypes count] == 0) {
+        NSManagedObject *type;
+        
+        // furniture
+        type = [NSEntityDescription insertNewObjectForEntityForName:@"BNRAssetType"
+                                             inManagedObjectContext:context];
+        [type setValue:@"Furniture" forKey:@"label"];
+        [allAssetTypes addObject:type];
+        
+        // jewelry
+        type = [NSEntityDescription insertNewObjectForEntityForName:@"BNRAssetType"
+                                             inManagedObjectContext:context];
+        [type setValue:@"Jewelry" forKey:@"label"];
+        [allAssetTypes addObject:type];
+        
+        // electronics
+        type = [NSEntityDescription insertNewObjectForEntityForName:@"BNRAssetType"
+                                             inManagedObjectContext:context];
+        [type setValue:@"Electronics" forKey:@"label"];
+        [allAssetTypes addObject:type];
+        
+    }
+    
+    return allAssetTypes;
+}
+
 @end
 
 

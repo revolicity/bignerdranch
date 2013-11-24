@@ -21,6 +21,7 @@
     __weak IBOutlet UILabel *dateLabel;
     __weak IBOutlet UIImageView *imageView;
     __weak IBOutlet UIToolbar *takePicture;
+    __weak IBOutlet UIButton *assetTypeButton;
     
     UIPopoverController *imagePickerPopover;
 }
@@ -30,6 +31,7 @@
 
 - (id)initForNewItem:(BOOL)isNew;
 
+- (IBAction)showAssetTypePicker:(id)sender;
 - (IBAction)takePicture:(id)sender;
 - (IBAction)backgroundTapped:(id)sender;
 

@@ -19,6 +19,7 @@
 		DA2E449C16E3E1560095B724 /* BNRItemStore.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2E449B16E3E1560095B724 /* BNRItemStore.m */; };
 		DA4139D3171A5AEB005D2F28 /* HomepwnerItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4139D2171A5AEB005D2F28 /* HomepwnerItemCell.m */; };
 		DA4139D5171A5B78005D2F28 /* HomepwnerItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DA4139D4171A5B78005D2F28 /* HomepwnerItemCell.xib */; };
+		DA45AE351842BA9300C913EF /* AssetTypePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = DA45AE341842BA9300C913EF /* AssetTypePicker.m */; };
 		DA8A95E41829D2E600420BA4 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8A95E21829D2E600420BA4 /* ImageViewController.m */; };
 		DA8A95E51829D2E600420BA4 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DA8A95E31829D2E600420BA4 /* ImageViewController.xib */; };
 		DA92403C170628CB0084EFA9 /* BNRImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = DA92403B170628CB0084EFA9 /* BNRImageStore.m */; };
@@ -50,6 +51,8 @@
 		DA4139D1171A5AEB005D2F28 /* HomepwnerItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomepwnerItemCell.h; sourceTree = "<group>"; };
 		DA4139D2171A5AEB005D2F28 /* HomepwnerItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomepwnerItemCell.m; sourceTree = "<group>"; };
 		DA4139D4171A5B78005D2F28 /* HomepwnerItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomepwnerItemCell.xib; sourceTree = "<group>"; };
+		DA45AE331842BA9300C913EF /* AssetTypePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetTypePicker.h; sourceTree = "<group>"; };
+		DA45AE341842BA9300C913EF /* AssetTypePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetTypePicker.m; sourceTree = "<group>"; };
 		DA8A95E11829D2E600420BA4 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		DA8A95E21829D2E600420BA4 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		DA8A95E31829D2E600420BA4 /* ImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
@@ -114,6 +117,8 @@
 				DA9631C218385EAD007CDA5C /* BNRItem.h */,
 				DA9631C318385EAD007CDA5C /* BNRItem.m */,
 				DA2E449B16E3E1560095B724 /* BNRItemStore.m */,
+				DA45AE331842BA9300C913EF /* AssetTypePicker.h */,
+				DA45AE341842BA9300C913EF /* AssetTypePicker.m */,
 				DA2E449A16E3E1560095B724 /* BNRItemStore.h */,
 				DA92403B170628CB0084EFA9 /* BNRImageStore.m */,
 				DA92403A170628CB0084EFA9 /* BNRImageStore.h */,
@@ -219,6 +224,7 @@
 			files = (
 				DA2E448416E3D53F0095B724 /* main.m in Sources */,
 				DA2E448816E3D53F0095B724 /* HomepwnerAppDelegate.m in Sources */,
+				DA45AE351842BA9300C913EF /* AssetTypePicker.m in Sources */,
 				DA2E449616E3DE1E0095B724 /* ItemsViewController.m in Sources */,
 				DA2E449C16E3E1560095B724 /* BNRItemStore.m in Sources */,
 				DAD3EF0116F7F53800357C82 /* DetailViewController.m in Sources */,

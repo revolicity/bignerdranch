@@ -7,9 +7,12 @@
 //
 
 #import "DetailViewController.h"
+
 #import "BNRItem.h"
 #import "BNRImageStore.h"
 #import "BNRItemStore.h"
+#import "AssetTypePicker.h"
+
 
 @implementation DetailViewController
 
@@ -214,6 +217,13 @@
         //clear the imageView
         [imageView setImage:nil];
     }
+    
+    NSString *typeLabel = [[item assetType] valueForKey:@"label"];
+    if (!typeLabel)
+        typeLabel = @"None";
+    
+    [assetTypeButton setTitle:[NSString stringWithFormat:@"Type: %@", typeLabel]
+                     forState:UIControlStateNormal];
 }
 
 // when we go away from this view, we need use the new data to set things back in item store or itemsviewcontroller
@@ -278,6 +288,17 @@
     {
         return (io == UIInterfaceOrientationPortrait);
     }
+}
+
+- (IBAction)showAssetTypePicker:(id)sender
+{
+    [[self view] endEditing:YES];
+    
+    AssetTypePicker *assetTypePicker = [[AssetTypePicker alloc] init];
+    [assetTypePicker setAssetItem:item];
+    
+    [[self navigationController] pushViewController:assetTypePicker
+                                           animated:YES];
 }
 
 @end
